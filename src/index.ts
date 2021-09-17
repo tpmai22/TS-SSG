@@ -3,11 +3,6 @@
 import * as yargs from 'yargs';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import chalk from 'chalk';
-
-// Decorated console log
-const logError = (message: string) => console.log(chalk.hex('#FF616D')(message));
-const logSuccess = (message: string) => console.log(chalk.hex('#66DE93')(message));
 
 const argv = yargs
   .option({
@@ -27,19 +22,19 @@ const argv = yargs
   _: (string | number)[];
   $0: string;
 };
-const { input} = argv;
+const { input } = argv;
 
-const output = './dist';
+const output = 'dist';
 fs.removeSync(output);
 fs.ensureDirSync(output);
 fs.ensureFileSync(`${output}/index.css`);
 
-
 fs.copyFileSync('src/styles/index.css', `${output}/index.css`);
+
 /**
- * Generate HTML mark up from .txt file
- * @param fileName File to be parsed
- * @return HTML markup, empty if file is invalid
+ * Description
+ * @param fileName What's fileName?
+ * @return what it returns?
  */
 const processFile = (filePath: string): string => {
   const extension = path.extname(filePath).toLowerCase();
@@ -64,13 +59,11 @@ const processFile = (filePath: string): string => {
   const head = `<meta charset="UTF-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link rel="stylesheet" href="${
-                  path.relative(path.dirname(filePath), input) || './'
-                }/index.css"> 
+                <link rel="stylesheet" href="index.css"> 
                 <title>${title || path.basename(filePath, '.txt')}</title>`;
 
   const body = `
-                ${title ? `<h1 class="text-center">${title}</h1>` : ''}
+                ${title ? `<h1>${title}</h1>` : ''}
                 ${content
                   .split(/\r?\n\r?\n/)
                   .map((para) => `<p>${para.replace(/\r?\n/, ' ')}</p>`)
@@ -84,55 +77,41 @@ const processFile = (filePath: string): string => {
         </head>
         <body>
           ${body}
-          <h6 class="text-center"> End </h6>
         </body>
       </html>`;
 
-  logSuccess(`✅ ${filePath}`);
   return markup.split(/\n\s+/).join('\n');
 };
 
-/**
- * Generate HTML file for each .txt encountered
- * @param pathName Directory or file to be parsed
- * @return list of generated file paths
- * */
-
-  const generate = (filePath: string, dists: string[]): string[] => {
-    try {
-      const fileStat = fs.statSync(filePath);
-        const markup = processFile(filePath);
-        if (markup) {
-          const dist = `${output}/${path.basename(filePath, '.txt')}.html`;
-
-          fs.ensureFileSync(dist);
-          fs.writeFileSync(dist, markup, { flag: 'w' });
-          return dists.concat(dist);
-        }
-        return dists;
-    } catch (err) {
-      return dists;
-    }
-  };
-  
 let inputPath;
 try {
   inputPath = fs.statSync(input);
 } catch {
-  logError(`${input}: No such file or directory`);
+  console.error(`${input}: No such file or directory`);
   fs.readdirSync(output);
   process.exit(1);
 }
 
 if (inputPath.isFile()) {
-  const markup = processFile(input, true);
+  const markup = processFile(input);
   if (!markup) {
-    logError('Input file must be .txt');
+    console.error('Input file must be .txt');
   }
 
   fs.writeFileSync(`${output}/${path.basename(input, '.txt')}.html`, markup, { flag: 'w' });
 } else if (inputPath.isDirectory()) {
-  const dists = generateHTMLs(input);
+  const files = fs.readdirSync(input, { withFileTypes: true }).filter((file) => file.isFile());
+
+  const dists: string[] = [];
+
+  files.forEach((file) => {
+    const markup = processFile(`${input}/${file.name}`);
+    if (markup) {
+      const filePath = `${output}/${path.basename(file.name, '.txt')}.html`;
+      fs.writeFileSync(filePath, markup, { flag: 'w' });
+      dists.push(filePath);
+    }
+  });
 
   const indexMarkup = `<!DOCTYPE html>
       <html lang="en">
@@ -163,6 +142,6 @@ if (inputPath.isFile()) {
 
   fs.writeFileSync(`${output}/index.html`, indexMarkup, { flag: 'w' });
 } else {
-  logError(`${input}: No such file or directory`);
+  console.error(`${input}: No such file or directory`);
   process.exit(1);
 }
