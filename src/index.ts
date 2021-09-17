@@ -32,7 +32,7 @@ fs.ensureFileSync(`${outputDir}/index.css`);
 fs.copyFileSync('src/styles/index.css', `${outputDir}/index.css`);
 
 //Create html markup file from provided text file
-const processFile = (filePath: string): string => {
+const processingFile = (filePath: string): string => {
   const fileExt = path.extname(filePath).toLowerCase();
   if (fileExt !== '.txt') {
     return '';
@@ -89,7 +89,7 @@ try {
 }
 
 if (inputPath.isFile()) {
-  const markup = processFile(input);
+  const markup = processingFile(input);
   if (!markup) {
     console.error('Input file must extension must be .txt');
   }
@@ -101,7 +101,7 @@ if (inputPath.isFile()) {
   const dists: string[] = [];
 
   files.forEach((file) => {
-    const markup = processFile(`${input}/${file.name}`);
+    const markup = processingFile(`${input}/${file.name}`);
     if (markup) {
       const filePath = `${outputDir}/${path.basename(file.name, '.txt')}.html`;
       fs.writeFileSync(filePath, markup, { flag: 'w' });
