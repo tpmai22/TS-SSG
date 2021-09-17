@@ -8,7 +8,7 @@ const argv = yargs
   .option({
     input: {
       alias: 'i',
-      describe: 'File or folder to be parsed',
+      describe: 'Text file to create an html file',
       type: 'string',
       demandOption: true,
       requiresArg: true,
@@ -24,28 +24,24 @@ const argv = yargs
 };
 const { input } = argv;
 
-const output = 'dist';
-fs.removeSync(output);
-fs.ensureDirSync(output);
-fs.ensureFileSync(`${output}/index.css`);
+const outputDir = 'dist';
+fs.removeSync(outputDir);
+fs.ensureDirSync(outputDir);
+fs.ensureFileSync(`${outputDir}/index.css`);
 
-fs.copyFileSync('src/styles/index.css', `${output}/index.css`);
+fs.copyFileSync('src/styles/index.css', `${outputDir}/index.css`);
 
-/**
- * Description
- * @param fileName What's fileName?
- * @return what it returns?
- */
+//Create html markup file from provided text file
 const processFile = (filePath: string): string => {
-  const extension = path.extname(filePath).toLowerCase();
-  if (extension !== '.txt') {
+  const fileExt = path.extname(filePath).toLowerCase();
+  if (fileExt !== '.txt') {
     return '';
   }
 
-  const text = fs.readFileSync(filePath, 'utf-8');
+  const file = fs.readFileSync(filePath, 'utf-8');
 
   // title is before the first 2 blank lines of the text
-  const titleAndContent = text.split(/\n\n\n/);
+  let titleAndContent = file.split(/\n\n\n/);
   let title = '';
   let content = '';
 
@@ -87,18 +83,18 @@ let inputPath;
 try {
   inputPath = fs.statSync(input);
 } catch {
-  console.error(`${input}: No such file or directory`);
-  fs.readdirSync(output);
+  console.error(`${input}: File or directory could not be found`);
+  fs.readdirSync(outputDir);
   process.exit(1);
 }
 
 if (inputPath.isFile()) {
   const markup = processFile(input);
   if (!markup) {
-    console.error('Input file must be .txt');
+    console.error('Input file must extension must be .txt');
   }
 
-  fs.writeFileSync(`${output}/${path.basename(input, '.txt')}.html`, markup, { flag: 'w' });
+  fs.writeFileSync(`${outputDir}/${path.basename(input, '.txt')}.html`, markup, { flag: 'w' });
 } else if (inputPath.isDirectory()) {
   const files = fs.readdirSync(input, { withFileTypes: true }).filter((file) => file.isFile());
 
@@ -107,7 +103,7 @@ if (inputPath.isFile()) {
   files.forEach((file) => {
     const markup = processFile(`${input}/${file.name}`);
     if (markup) {
-      const filePath = `${output}/${path.basename(file.name, '.txt')}.html`;
+      const filePath = `${outputDir}/${path.basename(file.name, '.txt')}.html`;
       fs.writeFileSync(filePath, markup, { flag: 'w' });
       dists.push(filePath);
     }
@@ -128,7 +124,7 @@ if (inputPath.isFile()) {
             ${dists
               .map(
                 (dist) =>
-                  `<li><a href="${path.relative(output, dist)}">${path.basename(
+                  `<li><a href="${path.relative(outputDir, dist)}">${path.basename(
                     dist,
                     '.html'
                   )}</a></li>`
@@ -140,7 +136,7 @@ if (inputPath.isFile()) {
     .split(/\n\s+/)
     .join('\n');
 
-  fs.writeFileSync(`${output}/index.html`, indexMarkup, { flag: 'w' });
+  fs.writeFileSync(`${outputDir}/index.html`, indexMarkup, { flag: 'w' });
 } else {
   console.error(`${input}: No such file or directory`);
   process.exit(1);
