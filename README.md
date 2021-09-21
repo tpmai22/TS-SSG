@@ -22,6 +22,7 @@ Options:
 Kindly install `ts-node` in your VS code command line:
 
 ```
+npm install typescript
 npm install -g ts-node
 ```
 
