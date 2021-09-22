@@ -34,7 +34,7 @@ fs.copyFileSync('src/styles/index.css', `${outputDir}/index.css`);
 //Create html markup file from provided text file
 const processingFile = (filePath: string): string => {
   const fileExt = path.extname(filePath).toLowerCase();
-  if (fileExt !== '.txt') {
+  if (fileExt !== '.txt' && fileExt !== ".md") {// || fileExt !== ".md" gave an error saying always would return true.
     return '';
   }
 
@@ -56,15 +56,26 @@ const processingFile = (filePath: string): string => {
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <link rel="stylesheet" href="index.css"> 
-                <title>${title || path.basename(filePath, '.txt')}</title>`;
+                <title>${title || path.basename(filePath, '.txt') || path.basename(filePath, '.md')}</title>`;
+  let body;
+  if(fileExt === '.md'){
+    body = `
+                  ${title ? `<h1>${title}</h1>` : ''}
+                  ${content
+                    .split(/\r?\n\r?\n/)
+                    .map((para) => para.startsWith("#") ? `<h1>${para.replace(/\r?\n/, ' ').replace('#', '')}</h1>` : `<p>${para.replace(/\r?\n/, ' ')}</p>`)
+                    .join('\n')}
+                    `;
 
-  const body = `
-                ${title ? `<h1>${title}</h1>` : ''}
-                ${content
-                  .split(/\r?\n\r?\n/)
-                  .map((para) => `<p>${para.replace(/\r?\n/, ' ')}</p>`)
-                  .join('\n')}
-                  `;
+  }else if(fileExt === '.txt'){
+    body = `
+    ${title ? `<h1>${title}</h1>` : ''}
+    ${content
+      .split(/\r?\n\r?\n/)
+      .map((para) =>`<p>${para.replace(/\r?\n/, ' ')}</p>`)
+      .join('\n')}
+      `;
+  }
 
   const markup = `<!DOCTYPE html>
       <html lang="en">
@@ -76,7 +87,7 @@ const processingFile = (filePath: string): string => {
         </body>
       </html>`;
 
-  return markup.split(/\n\s+/).join('\n');
+  return markup.split(/\n\s+/).join('\n'); // formatting the html.
 };
 
 let inputPath;
@@ -91,10 +102,9 @@ try {
 if (inputPath.isFile()) {
   const markup = processingFile(input);
   if (!markup) {
-    console.error('Input file must extension must be .txt');
+    console.error('Input file must extension must be .txt or .md');
   }
-
-  fs.writeFileSync(`${outputDir}/${path.basename(input, '.txt')}.html`, markup, { flag: 'w' });
+  path.extname(input) === '.md' ? fs.writeFileSync(`${outputDir}/${path.basename(input, '.md')}.html`, markup, { flag: 'w' }) : fs.writeFileSync(`${outputDir}/${path.basename(input, '.txt')}.html`, markup, { flag: 'w' });
 } else if (inputPath.isDirectory()) {
   const files = fs.readdirSync(input, { withFileTypes: true }).filter((file) => file.isFile());
 
