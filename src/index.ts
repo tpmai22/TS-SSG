@@ -31,10 +31,27 @@ fs.ensureFileSync(`${outputDir}/index.css`);
 
 fs.copyFileSync('src/styles/index.css', `${outputDir}/index.css`);
 
+const heading1Markdown = (content: string): string => { //heading1Markdown() takes the content which is unformatted md file text.
+  
+return content.split(/[\r?\n\r?\n]/g)
+      .map((line) =>
+        line.replace(/(^[^#](.*)$)/gim, '<p>$1</p>').replace(/^## (.*$)/, "<h2>$1</h2>").replace(/^# (.*$)/gim, '<h1>$1</h1>')
+        /*
+        replace any line starting with # and a space with <h1> surrounding itself.
+        replace any line starting with an alphabetical character followed by 0 or more of anything with <p> surrounding itself.
+        */
+      ).join('\n'); //this makes the content a string rather than array.
+};
+
+const processMarkdown = (data: string): string => {
+  let processedContent: string = "";
+  processedContent = heading1Markdown(data);
+  return processedContent;
+};
 //Create html markup file from provided text file
 const processingFile = (filePath: string): string => {
   const fileExt = path.extname(filePath).toLowerCase();
-  if (fileExt !== '.txt') {
+  if (fileExt !== '.txt' && fileExt !== ".md") {
     return '';
   }
 
@@ -56,16 +73,18 @@ const processingFile = (filePath: string): string => {
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <link rel="stylesheet" href="index.css"> 
-                <title>${title || path.basename(filePath, '.txt')}</title>`;
-
-  const body = `
-                ${title ? `<h1>${title}</h1>` : ''}
-                ${content
-                  .split(/\r?\n\r?\n/)
-                  .map((para) => `<p>${para.replace(/\r?\n/, ' ')}</p>`)
-                  .join('\n')}
+                <title>${title || path.basename(filePath, '.txt') || path.basename(filePath, '.md')}</title>`;
+                const body = `
+                ${title ? `<h1 class="text-center">${title}</h1>` : ''}
+                ${
+                  fileExt === ".md" //if it's markdown do some extra processing.
+                    ? processMarkdown(content)
+                    : content //for regular txt files.
+                        .split(/\r?\n\r?\n/)
+                        .map((para) => `<p>${para.replace(/\r?\n/, ' ')}</p>`)
+                        .join('\n')
+                }
                   `;
-
   const markup = `<!DOCTYPE html>
       <html lang="en">
         <head>
@@ -76,7 +95,7 @@ const processingFile = (filePath: string): string => {
         </body>
       </html>`;
 
-  return markup.split(/\n\s+/).join('\n');
+  return markup.split(/\n\s+/).join('\n'); // formatting the html.
 };
 
 let inputPath;
@@ -91,10 +110,9 @@ try {
 if (inputPath.isFile()) {
   const markup = processingFile(input);
   if (!markup) {
-    console.error('Input file must extension must be .txt');
+    console.error('Input file must extension must be .txt or .md');
   }
-
-  fs.writeFileSync(`${outputDir}/${path.basename(input, '.txt')}.html`, markup, { flag: 'w' });
+  path.extname(input) === '.md' ? fs.writeFileSync(`${outputDir}/${path.basename(input, '.md')}.html`, markup, { flag: 'w' }) : fs.writeFileSync(`${outputDir}/${path.basename(input, '.txt')}.html`, markup, { flag: 'w' });
 } else if (inputPath.isDirectory()) {
   const files = fs.readdirSync(input, { withFileTypes: true }).filter((file) => file.isFile());
 
@@ -103,7 +121,7 @@ if (inputPath.isFile()) {
   files.forEach((file) => {
     const markup = processingFile(`${input}/${file.name}`);
     if (markup) {
-      const filePath = `${outputDir}/${path.basename(file.name, '.txt')}.html`;
+      const filePath = path.extname(file.name) === ".txt" ? `${outputDir}/${path.basename(file.name, '.txt')}.html` : `${outputDir}/${path.basename(file.name, '.md')}.html`;
       fs.writeFileSync(filePath, markup, { flag: 'w' });
       dists.push(filePath);
     }
