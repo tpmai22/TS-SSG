@@ -36,6 +36,7 @@ const heading1Markdown = (content: string): string => { //heading1Markdown() tak
 return content.split(/[\r?\n\r?\n]/g)
       .map((line) =>
         line
+        .replace (/(^`)(.+?(?=`))(`$)/gim, '<code>$2</code>')
         .replace(/-{3}/gim, '<hr>')
         .replace(/(^(?!<)[^#](.*$))/gim, '<p>$1</p>')
         .replace(/^##\s(.*$)/gim, "<h2>$1</h2>")
