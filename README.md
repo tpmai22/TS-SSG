@@ -8,6 +8,7 @@
 ```
 Options:
   -i, --input       File or folder to be parsed              [string] [required]
+  -c, --config      Configuration file                                  [string]
   -h, --help        Show help                                          [boolean]
   -v, --version     Show version number                                [boolean]
 ```
@@ -35,6 +36,12 @@ Example command line:
 
 ```
 ts-node src/index.ts -i .\testFolder\
+```
+
+Using config file:
+
+```
+ts-node src/index.ts -c config.json
 ```
 
 ## License

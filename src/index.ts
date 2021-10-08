@@ -14,6 +14,8 @@ const argv = yargs
       requiresArg: true,
     },
   })
+  .config()
+  .alias('config', 'c')
   .help()
   .alias('help', 'h')
   .version()
