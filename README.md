@@ -41,7 +41,7 @@ ts-node src/index.ts -i .\testFolder\
 Using config file:
 
 ```
-ts-node src/index.ts -c config.json
+ts-node src/index.ts -c src/config.json
 ```
 
 ## License
