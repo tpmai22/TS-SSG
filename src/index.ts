@@ -14,7 +14,6 @@ fs.ensureFileSync(`${outputDir}/index.css`);
 
 fs.copyFileSync('src/styles/index.css', `${outputDir}/index.css`);
 
-const processFilePath = (any) : void =>{ 
 let inputPath;
 try {
   inputPath = fs.statSync(input);
@@ -76,6 +75,5 @@ if (inputPath.isFile()) {
     console.error(`${input}: No such file or directory`);
     process.exit(1);
   }
-}
 
 

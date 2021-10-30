@@ -1,22 +1,10 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
+var md = require('markdown-it')();
 
 const heading1Markdown = (content: string): string => { //heading1Markdown() takes the content which is unformatted md file text.
   
-  return content.split(/[\r?\n\r?\n]/g)
-        .map((line) =>
-          line
-          .replace (/(^`)(.+?(?=`))(`$)/gim, '<code>$2</code>')
-          .replace(/-{3}/gim, '<hr>')
-          .replace(/(^(?!<)[^#](.*$))/gim, '<p>$1</p>')
-          .replace(/^##\s(.*$)/gim, "<h2>$1</h2>")
-          .replace(/^#\s(.*$)/gim, '<h1>$1</h1>')
-          
-          /*
-          replace any line starting with # and a space with <h1> surrounding itself.
-          replace any line starting with an alphabetical character followed by 0 or more of anything with <p> surrounding itself.
-          */
-        ).join('\n'); //this makes the content a string rather than array.
+  return md.render(content);
   };
 
 const processMarkdown = (data: string): string => {

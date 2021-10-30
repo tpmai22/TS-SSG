@@ -2,7 +2,7 @@
 
 **TG-SSG** is a static site generator using Typescript.
 > An _SSG_ (Static Site Generator) is a tool for generating a complete HTML web site from raw data.
-> This SSG supports Markdown h1 feature and h2 features.
+> This SSG is full markdown support
 ## Options
 
 ```

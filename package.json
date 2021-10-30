@@ -21,14 +21,14 @@
     "eslint-plugin-prettier": "^4.0.0",
     "nodemon": "^2.0.12",
     "prettier": "^2.3.2",
-    "ts-node": "^10.2.1",
-    "typescript": "^4.4.3"
+    "ts-node": "^10.2.1"
   },
   "dependencies": {
     "chalk": "^3.0.0",
     "commander": "^8.2.0",
     "fs-extra": "^10.0.0",
-    "typescript": "^1.0.0",
+    "markdown-it": "^12.2.0",
+    "typescript": "^4.4.3",
     "yargs": "^17.1.1"
   }
 }
