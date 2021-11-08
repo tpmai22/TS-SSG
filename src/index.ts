@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import * as fs from 'fs-extra';
 import * as path from 'path';
-
 import argv from './argv';
 import processingFile from './html-maker';
 
@@ -28,7 +27,9 @@ if (inputPath.isFile()) {
   if (!markup) {
     console.error('Input file must extension must be .txt or .md');
   }
-  path.extname(input) === '.md' ? fs.writeFileSync(`${outputDir}/${path.basename(input, '.md')}.html`, markup, { flag: 'w' }) : fs.writeFileSync(`${outputDir}/${path.basename(input, '.txt')}.html`, markup, { flag: 'w' });
+  path.extname(input) === '.md'
+    ? fs.writeFileSync(`${outputDir}/${path.basename(input, '.md')}.html`, markup, { flag: 'w' })
+    : fs.writeFileSync(`${outputDir}/${path.basename(input, '.txt')}.html`, markup, { flag: 'w' });
 } else if (inputPath.isDirectory()) {
   const files = fs.readdirSync(input, { withFileTypes: true }).filter((file) => file.isFile());
 
@@ -37,7 +38,10 @@ if (inputPath.isFile()) {
   files.forEach((file) => {
     const markup = processingFile(`${input}/${file.name}`);
     if (markup) {
-      const filePath = path.extname(file.name) === ".txt" ? `${outputDir}/${path.basename(file.name, '.txt')}.html` : `${outputDir}/${path.basename(file.name, '.md')}.html`;
+      const filePath =
+        path.extname(file.name) === '.txt'
+          ? `${outputDir}/${path.basename(file.name, '.txt')}.html`
+          : `${outputDir}/${path.basename(file.name, '.md')}.html`;
       fs.writeFileSync(filePath, markup, { flag: 'w' });
       dists.push(filePath);
     }
@@ -70,10 +74,8 @@ if (inputPath.isFile()) {
     .split(/\n\s+/)
     .join('\n');
 
-    fs.writeFileSync(`${outputDir}/index.html`, indexMarkup, { flag: 'w' });
-  } else {
-    console.error(`${input}: No such file or directory`);
-    process.exit(1);
-  }
-
-
+  fs.writeFileSync(`${outputDir}/index.html`, indexMarkup, { flag: 'w' });
+} else {
+  console.error(`${input}: No such file or directory`);
+  process.exit(1);
+}
