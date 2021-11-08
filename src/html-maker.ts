@@ -1,28 +1,25 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
-var md = require('markdown-it')();
 
-const heading1Markdown = (content: string): string => { //heading1Markdown() takes the content which is unformatted md file text.
-  
-  return md.render(content);
-  };
+const md = require('markdown-it')();
 
+const heading1Markdown = (content: string): string => md.render(content);
 const processMarkdown = (data: string): string => {
-  let processedContent: string = "";
+  let processedContent: string = '';
   processedContent = heading1Markdown(data);
   return processedContent;
 };
-//Create html markup file from provided text file
+// Create html markup file from provided text file
 const processingFile = (filePath: string): string => {
   const fileExt = path.extname(filePath).toLowerCase();
-  if (fileExt !== '.txt' && fileExt !== ".md") {
+  if (fileExt !== '.txt' && fileExt !== '.md') {
     return '';
   }
 
   const file = fs.readFileSync(filePath, 'utf-8');
 
   // title is before the first 2 blank lines of the text
-  let titleAndContent = file.split(/\n\n\n/);
+  const titleAndContent = file.split(/\n\n\n/);
   let title = '';
   let content = '';
 
@@ -37,13 +34,15 @@ const processingFile = (filePath: string): string => {
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <link rel="stylesheet" href="index.css"> 
-                <title>${title || path.basename(filePath, '.txt') || path.basename(filePath, '.md')}</title>`;
-                const body = `
+                <title>${
+                  title || path.basename(filePath, '.txt') || path.basename(filePath, '.md')
+                }</title>`;
+  const body = `
                 ${title ? `<h1 class="text-center">${title}</h1>` : ''}
                 ${
-                  fileExt === ".md" //if it's markdown do some extra processing.
+                  fileExt === '.md' // if it's markdown do some extra processing.
                     ? processMarkdown(content)
-                    : content //for regular txt files.
+                    : content // for regular txt files.
                         .split(/\r?\n\r?\n/)
                         .map((para) => `<p>${para.replace(/\r?\n/, ' ')}</p>`)
                         .join('\n')

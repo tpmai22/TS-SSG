@@ -1,8 +1,10 @@
 # TS-SSG
 
 **TG-SSG** is a static site generator using Typescript.
+
 > An _SSG_ (Static Site Generator) is a tool for generating a complete HTML web site from raw data.
 > This SSG is full markdown support
+
 ## Options
 
 ```
@@ -17,20 +19,7 @@ Options:
 
 [Preview](https://beamazedvariable.github.io/TS-SSG/)
 
-## How to use it
-
-Kindly install `ts-node` in your VS code command line:
-
-```
-npm install typescript
-npm install -g ts-node
-```
-
-Install all the necessary dependencies using:
-
-```
-npm install -g
-```
+## How to use
 
 Example command line:
 

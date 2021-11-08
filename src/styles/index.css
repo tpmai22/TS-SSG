@@ -39,16 +39,16 @@ THE SOFTWARE.
   }
 
   a[href]:after {
-    content: " (" attr(href) ")";
+    content: ' (' attr(href) ')';
   }
 
   abbr[title]:after {
-    content: " (" attr(title) ")";
+    content: ' (' attr(title) ')';
   }
 
-  a[href^="#"]:after,
-  a[href^="javascript:"]:after {
-    content: "";
+  a[href^='#']:after,
+  a[href^='javascript:']:after {
+    content: '';
   }
 
   pre,
@@ -85,7 +85,7 @@ THE SOFTWARE.
 
 pre,
 code {
-  font-family: Menlo, Monaco, "Courier New", monospace;
+  font-family: Menlo, Monaco, 'Courier New', monospace;
 }
 
 pre {
@@ -207,7 +207,7 @@ html {
 
 body {
   color: #444;
-  font-family: "Open Sans Condensed", sans-serif;
+  font-family: 'Open Sans Condensed', sans-serif;
   font-weight: 300;
   margin: 0 auto;
   max-width: 48rem;
