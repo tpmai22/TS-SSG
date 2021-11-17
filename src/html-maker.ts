@@ -4,6 +4,7 @@ import * as path from 'path';
 const md = require('markdown-it')();
 
 const heading1Markdown = (content: string): string => md.render(content);
+
 const processMarkdown = (data: string): string => {
   let processedContent: string = '';
   processedContent = heading1Markdown(data);
@@ -61,4 +62,5 @@ const processingFile = (filePath: string): string => {
   return markup.split(/\n\s+/).join('\n'); // formatting the html.
 };
 
-export default processingFile;
+module.exports.processingFile = processingFile;
+module.exports.processMarkdown = processMarkdown;
