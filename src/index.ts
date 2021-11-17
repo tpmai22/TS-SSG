@@ -2,9 +2,9 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import argv from './argv';
-import processingFile from './html-maker';
 
-const { input } = argv;
+const { input } = argv();
+const processingFile = require('./html-maker');
 
 const outputDir = 'dist';
 fs.removeSync(outputDir);
@@ -23,7 +23,7 @@ try {
 }
 
 if (inputPath.isFile()) {
-  const markup = processingFile(input);
+  const markup = processingFile.processingFile(input);
   if (!markup) {
     console.error('Input file must extension must be .txt or .md');
   }
@@ -36,7 +36,7 @@ if (inputPath.isFile()) {
   const dists: string[] = [];
 
   files.forEach((file) => {
-    const markup = processingFile(`${input}/${file.name}`);
+    const markup = processingFile.processingFile(`${input}/${file.name}`);
     if (markup) {
       const filePath =
         path.extname(file.name) === '.txt'
