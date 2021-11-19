@@ -47,6 +47,7 @@
     "commander": "^8.2.0",
     "fs-extra": "^10.0.0",
     "markdown-it": "^12.2.0",
+    "react-test-renderer": "^17.0.2",
     "yargs": "^17.1.1"
   }
 }

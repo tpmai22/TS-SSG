@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`processMarkdown to HTML renders correctly 1`] = `
+"<h1>this is a header 1</h1>
+<h1>this is a <strong>header</strong> line.</h1>
+<p>also regular.</p>
+<h2>this is a header again.</h2>
+<h3>heading wooooooo</h3>
+<p>that the 2 lines &quot;this is header line&quot; and &quot;</p>
+"
+`;
