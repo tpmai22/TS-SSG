@@ -21,3 +21,20 @@ We have helps form `ESLint` and `Prettier` before every commit but if you want t
 npm run lint
 npm run prettier
 ```
+
+## Testing
+
+`Test` is available to run by simply running
+
+```bash
+npm test
+
+// Testing seperate modules
+npm test module_name
+```
+
+To collect testing coverage
+
+```bash
+npm run coverage
+```
