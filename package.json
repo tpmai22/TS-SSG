@@ -2,7 +2,10 @@
   "name": "release0.1",
   "version": "0.0.1",
   "description": "Static Site Generator using ts",
-  "main": "index.ts",
+  "main": "./lib/index.js",
+  "bin": {
+    "ts_ssg": "./lib/index.js"
+  },
   "scripts": {
     "prettier": "prettier --write --ignore-path .prettierignore .",
     "prettier-check": "prettier --check \"src/**/*.{md,jsx,json,html,css,js,yml}\"",
@@ -12,7 +15,8 @@
     "prepare": "husky install",
     "test": "npx jest --verbose --",
     "test:watch": "npx jest jest --watch --",
-    "coverage": "npx jest --collectCoverage --"
+    "coverage": "npx jest --collectCoverage --",
+    "build": "tsc -p ."
   },
   "husky": {
     "hooks": {

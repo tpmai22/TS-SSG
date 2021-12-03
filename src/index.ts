@@ -11,7 +11,7 @@ fs.removeSync(outputDir);
 fs.ensureDirSync(outputDir);
 fs.ensureFileSync(`${outputDir}/index.css`);
 
-fs.copyFileSync('src/styles/index.css', `${outputDir}/index.css`);
+fs.copyFileSync(path.resolve(__dirname, '../styles/index.css'), `${outputDir}/index.css`);
 
 let inputPath;
 try {
