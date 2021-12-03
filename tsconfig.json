@@ -9,5 +9,7 @@
     "types": ["node", "jest"],
     "esModuleInterop": true,
     "resolveJsonModule": true
-  }
+  },
+  "include": ["src/*.ts"],
+  "exclude": ["src/__tests__"]
 }
