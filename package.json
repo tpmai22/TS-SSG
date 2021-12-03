@@ -1,5 +1,5 @@
 {
-  "name": "release0.1",
+  "name": "ts_ssg",
   "version": "0.1.0",
   "description": "Static Site Generator using ts",
   "main": "./lib/index.js",
