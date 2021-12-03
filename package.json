@@ -1,6 +1,6 @@
 {
   "name": "ts_ssg",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Static Site Generator using ts",
   "main": "./lib/index.js",
   "bin": {
